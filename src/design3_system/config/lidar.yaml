@@ -1,0 +1,11 @@
+LD19:
+        ros__parameters:
+                product_name: 'LDLiDAR_LD19'
+                port_name: '/dev/sensors/lidar'
+                topic_name: 'scan'
+                frame_id: 'base_laser'
+                port_baudrate: 230400
+                laser_scan_dir: True
+                enable_angle_crop_fund: False
+                angle_crop_min: 135.0
+                angle_crop_max: 225.0
