@@ -5,7 +5,7 @@ This repo contains the colcon workspace for the design3 project. Every ROS packa
 ## Installation
 
 ```bash
-git clone --recurse-submodules <URL>
+git clone --recurse-submodules git@github.com:GLO-3013-eq09/design3_ws.git
 cd design3_ws
 rosdep install --from-paths src -y --ignore-src --rosdistro=foxy --include-eol-distros
 ```
