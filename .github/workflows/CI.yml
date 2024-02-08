@@ -33,7 +33,6 @@ jobs:
 
   build:
     runs-on: ubuntu-20.04
-    timeout-minutes: 3
 
     steps:
       - uses: ros-tooling/setup-ros@v0.7
