@@ -17,13 +17,11 @@ jobs:
       - uses: actions/checkout@v3
 
       - uses: ros-tooling/setup-ros@v0.7
-        with:
-          required-ros-distributions: foxy
-
       - uses: ros-tooling/action-ros-ci@v0.3
         with:
           package-name: design3_system
           target-ros2-distro: foxy
+          vcs-repo-file-url: https://raw.githubusercontent.com/ros2/ros2/foxy/ros2.repos
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v3
