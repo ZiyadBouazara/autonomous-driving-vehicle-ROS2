@@ -16,20 +16,34 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - uses: ros-tooling/setup-ros@v0.7
+        with:
+          required-ros-distributions: foxy
+
+      - uses: ros-tooling/action-ros-ci@v0.3
+        with:
+          package-name: design3_system
+          target-ros2-distro: foxy
+
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v3
         with:
           python-version: "3.8"
 
-      - name: Install dependencies
+      - name: Install black formatter
         run: |
           python -m pip install --upgrade pip
-          pip install black 
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install black
 
       - name: Format with Black
         run: |
           black . --line-length 120
+
+      - name: Build ROS 2 Package
+        run: colcon build
+
+      # - name: Run ROS 2 Tests
+      #   run: colcon test
 
       # - name: Test with pytest
       #   run: |
