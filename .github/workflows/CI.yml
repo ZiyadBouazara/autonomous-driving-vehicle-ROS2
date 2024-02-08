@@ -43,7 +43,7 @@ jobs:
           package-name: design3_system
           target-ros2-distro: foxy
           vcs-repo-file-url: https://raw.githubusercontent.com/ros2/ros2/foxy/ros2.repos
-          import-token: ${{ secrets.GITHUB_TOKEN }}
+          import-token: ${{ secrets.ACCESS_TOKEN }}
 
       - name: Build ROS 2 Package
         run: colcon build
