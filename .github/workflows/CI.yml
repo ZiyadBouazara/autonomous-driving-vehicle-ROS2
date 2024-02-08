@@ -29,7 +29,7 @@ jobs:
 
       - name: Format with Black
         run: |
-          black .
+          black . --line-length 120
 
       # - name: Test with pytest
       #   run: |
