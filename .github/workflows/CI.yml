@@ -42,14 +42,3 @@ jobs:
           package-name: design3_system
           vcs-repo-file-url: https://raw.githubusercontent.com/ros2/ros2/foxy/ros2.repos
           import-token: ${{ secrets.ACCESS_TOKEN }}
-          skip-tests: true
-
-      - name: Build ROS 2 Package
-        run: colcon build
-
-      # - name: Run ROS 2 Tests
-      #   run: colcon test
-
-      # - name: Test with pytest
-      #   run: |
-      #     pytest
