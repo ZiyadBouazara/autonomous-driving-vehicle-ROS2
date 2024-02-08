@@ -44,7 +44,7 @@ jobs:
         with:
           target-ros2-distro: foxy
           package-name: design3_system
-          ref: humble
+          ref: foxy
           vcs-repo-file-url: https://raw.githubusercontent.com/ros2/ros2/foxy/ros2.repos
           import-token: ${{ secrets.ACCESS_TOKEN }}
           skip-tests: true
