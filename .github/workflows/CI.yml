@@ -40,7 +40,6 @@ jobs:
 
       - uses: ros-tooling/action-ros-ci@v0.3
         with:
-          package-name: design3_system
           target-ros2-distro: foxy
           vcs-repo-file-url: https://raw.githubusercontent.com/ros2/ros2/foxy/ros2.repos
           import-token: ${{ secrets.ACCESS_TOKEN }}
