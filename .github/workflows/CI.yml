@@ -35,14 +35,11 @@ jobs:
 
     steps:
       - uses: ros-tooling/setup-ros@v0.7
-        with:
-          required-ros-distributions: foxy
 
       - uses: ros-tooling/action-ros-ci@v0.3
         with:
           target-ros2-distro: foxy
           package-name: design3_system
-          ref: foxy
           vcs-repo-file-url: https://raw.githubusercontent.com/ros2/ros2/foxy/ros2.repos
           import-token: ${{ secrets.ACCESS_TOKEN }}
           skip-tests: true
