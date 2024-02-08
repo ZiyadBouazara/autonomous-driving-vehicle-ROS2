@@ -10,18 +10,11 @@ permissions:
   contents: write
 
 jobs:
-  build:
+  format:
     runs-on: ubuntu-20.04
 
     steps:
       - uses: actions/checkout@v3
-
-      - uses: ros-tooling/setup-ros@v0.7
-      - uses: ros-tooling/action-ros-ci@v0.3
-        with:
-          package-name: design3_system
-          target-ros2-distro: foxy
-          vcs-repo-file-url: https://raw.githubusercontent.com/ros2/ros2/foxy/ros2.repos
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v3
@@ -36,6 +29,21 @@ jobs:
       - name: Format with Black
         run: |
           black . --line-length 120
+
+  build:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: ros-tooling/setup-ros@v0.7
+
+      - uses: ros-tooling/action-ros-ci@v0.3
+        with:
+          package-name: design3_system
+          target-ros2-distro: foxy
+          vcs-repo-file-url: https://raw.githubusercontent.com/ros2/ros2/foxy/ros2.repos
+          import-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build ROS 2 Package
         run: colcon build
