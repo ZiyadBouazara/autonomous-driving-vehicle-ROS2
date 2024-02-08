@@ -1,0 +1,10 @@
+{
+  "recommendations": [
+    "esbenp.prettier-vscode",
+    "ms-python.vscode-pylance",
+    "ms-python.python",
+    "donjayamanne.python-environment-manager",
+    "ms-python.isort",
+    "ms-python.black-formatter"
+  ]
+}
