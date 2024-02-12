@@ -1,8 +1,10 @@
-import Jetson.GPIO as GPIO
 import time
+
+import Jetson.GPIO as GPIO
 
 # Pin Definitions
 output_pin = 18  # BOARD pin 12, BCM pin 18
+
 
 def main():
     # Pin Setup:
@@ -23,5 +25,6 @@ def main():
     finally:
         GPIO.cleanup()
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()

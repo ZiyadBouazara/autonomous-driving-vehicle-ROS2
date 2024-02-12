@@ -1,8 +1,10 @@
-import RPi.GPIO as GPIO
-import time
 import json
+import time
+
+import RPi.GPIO as GPIO
 
 OPTICAL_SENSOR_PIN = 7
+
 
 def on_pin_edge(event):
     print(event)
@@ -11,7 +13,6 @@ def on_pin_edge(event):
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(OPTICAL_SENSOR_PIN, GPIO.IN)
 # GPIO.add_event_detect(OPTICAL_SENSOR_PIN, GPIO.BOTH, callback=on_pin_edge)
-
 
 
 values = []
