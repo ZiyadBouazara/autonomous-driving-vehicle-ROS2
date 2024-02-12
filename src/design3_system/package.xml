@@ -7,6 +7,8 @@
   <maintainer email="team0@todo.todo">team0</maintainer>
   <license>TODO: License declaration</license>
 
+  <exec_depend>twist_mux</exec_depend>
+
   <buildtool_depend>ament_cmake</buildtool_depend>
 
   <export>

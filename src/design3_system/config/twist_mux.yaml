@@ -1,0 +1,7 @@
+twist_mux_node:
+  ros__parameters:
+    topics:
+      joystick:
+        topic: joy_vel
+        timeout: 0.5
+        priority: 10

@@ -22,6 +22,7 @@ def generate_launch_description():
         package="teleop_twist_joy",
         executable="teleop_node",
         parameters=[LaunchConfiguration("teleop_config")],
+        remappings=[("cmd_vel", "joy_vel")],
     )
 
     return LaunchDescription([teleop_la, joy_node, teleop_node])
