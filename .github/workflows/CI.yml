@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches: ["master"]
+  pull_request:
+    branches: ["master"]
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    runs-on: ubuntu-20.04
+    timeout-minutes: 3
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.8"
+
+      - name: Install black formatter
+        run: |
+          python -m pip install --upgrade pip
+          pip install black
+
+      - name: Format with Black
+        run: |
+          black . --line-length 120
+
+  build:
+    runs-on: ubuntu-20.04
+    timeout-minutes: 10
+
+    steps:
+      - uses: ros-tooling/setup-ros@v0.7
+
+      - uses: ros-tooling/action-ros-ci@v0.3
+        with:
+          target-ros2-distro: foxy
+          package-name: design3_system
+          vcs-repo-file-url: https://raw.githubusercontent.com/ros2/ros2/foxy/ros2.repos
+          import-token: ${{ secrets.ACCESS_TOKEN }}
