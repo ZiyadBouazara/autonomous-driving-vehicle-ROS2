@@ -5,3 +5,7 @@ twist_mux_node:
         topic: joy_vel
         timeout: 0.5
         priority: 10
+      drive:
+        topic: drive_vel
+        timeout: 0.5
+        priority: 20 

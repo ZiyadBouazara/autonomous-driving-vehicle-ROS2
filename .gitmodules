@@ -1,6 +1,6 @@
 [submodule "src/ldlidar_stl_ros2"]
 	path = src/ldlidar_stl_ros2
 	url = git@github.com:GLO-3013-eq09/ldlidar_stl_ros2.git
-[submodule "src/motor_driver"]
-	path = src/motor_driver
-	url = git@github.com:GLO-3013-eq09/motor_driver.git
+[submodule "src/ros2_aruco"]
+	path = src/ros2_aruco
+	url = https://github.com/GLO-3013-eq09/ros2_aruco

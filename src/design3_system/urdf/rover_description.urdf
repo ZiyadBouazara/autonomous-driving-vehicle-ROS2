@@ -1,0 +1,31 @@
+<robot name="rover">
+    <link name="base_link" />    
+    <link name="oak-d-base-frame" />    
+    <link name="base_laser" />    
+    <link name="front_bumper" />    
+    <link name="back_bumper" />    
+
+    <joint name="base_link_to_camera" type="fixed">
+       <origin xyz="0.08 0.0 0.052" rpy="0.0 -0.244346 0.0" />
+       <parent link="base_link"/>
+       <child link="oak-d-base-frame"/>
+    </joint>
+
+    <joint name="base_link_to_laser" type="fixed">
+        <origin xyz="0.030 0.0 0.090" rpy="0.0 0.0 -1.570796" />
+        <parent link="base_link" />
+        <child link="base_laser"/>
+    </joint>
+
+    <joint name="base_link_to_front_bumper" type="fixed">
+        <origin xyz="0.095 0.0 0.0" rpy="0.0 0.0 0.0" />
+        <parent link="base_link" />
+        <child link="front_bumper"/>
+    </joint>
+
+    <joint name="base_link_to_back_bumper" type="fixed">
+        <origin xyz="-0.095 0.0 0.0" rpy="0.0 0.0 0.0" />
+        <parent link="base_link" />
+        <child link="back_bumper"/>
+    </joint>
+</robot>

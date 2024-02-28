@@ -15,6 +15,10 @@ def generate_launch_description():
         PythonLaunchDescriptionSource([os.path.join(shared_dir, "launch"), "/lidar.launch.py"])
     )
 
+    description_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([os.path.join(shared_dir, "launch"), "/description.launch.py"])
+    )
+
     motor_driver_node = Node(package="motor_driver", executable="motor_driver_node")
 
     # Twist mux
@@ -34,4 +38,4 @@ def generate_launch_description():
         remappings=[("cmd_vel_out", "cmd_vel")],
     )
 
-    return LaunchDescription([lidar_launch, motor_driver_node, twist_mux_la, twist_mux_node])
+    return LaunchDescription([lidar_launch, description_launch, motor_driver_node, twist_mux_la, twist_mux_node])

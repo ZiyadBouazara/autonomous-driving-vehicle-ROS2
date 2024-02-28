@@ -23,4 +23,10 @@ install(DIRECTORY
 	DESTINATION share/${PROJECT_NAME}/
 )
 
+# Urdf files
+install(DIRECTORY
+	urdf
+	DESTINATION share/${PROJECT_NAME}/
+)
+
 ament_package()
