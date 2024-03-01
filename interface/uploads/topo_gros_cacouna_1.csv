@@ -1,0 +1,15 @@
+Origine,Direction,Destination
+A1,g,ZC1
+A1,l,A4
+A1,d,ZD1
+A2,g,A4
+A2,l,ZD1
+A2,d,A2
+A3,g,ZD1
+A3,l,A2
+A3,d,ZC1
+A4,g,A2
+A4,l,ZC1
+A4,d,A4
+ZC1,l,A1
+ZD1,l,A3

@@ -33,9 +33,16 @@ killall screen
 ros2 launch design3_system <subsystem>.launch.py # You can use autocomplete to list the different available launch file
 ```
 
+## Running tests and code coverage
+
+```bash
+./test.bash
+```
+
 ## Visualization
 
 Prerequisite:
+
 - Install Foxglove Studio on your personal machine
 
 1. On your personal machine, connect to the robot's wifi (`WAVE_ROVER_3`)

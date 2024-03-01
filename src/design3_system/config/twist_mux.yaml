@@ -1,11 +1,15 @@
 twist_mux_node:
   ros__parameters:
     topics:
-      joystick:
-        topic: joy_vel
+      drive:
+        topic: cmd_drive
         timeout: 0.5
         priority: 10
-      drive:
-        topic: drive_vel
+      joystick:
+        topic: cmd_joy
         timeout: 0.5
-        priority: 20 
+        priority: 20
+      car_detection:
+        topic: cmd_detected_car
+        timeout: 0.5
+        priority: 255

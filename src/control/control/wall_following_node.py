@@ -14,30 +14,27 @@ from std_msgs.msg import Float64
 
 # PID CONTROL PARAMS
 KP: float = 8.0
-KD: float = 0
+KD: float = 0.05
 KI: float = 0
 
 # WALL FOLLOW PARAMS
-THETA_DEG: int = 50
-DESIRED_DISTANCE_FROM_WALL: float = 0.15
-LOOKAHEAD: float = 1.0
+THETA_DEG: int = 70
+DESIRED_DISTANCE_FROM_WALL: float = 0.14
+LOOKAHEAD: float = 1.4
 
 
-class WallFollow(Node):
+class WallFollowingNode(Node):
     def __init__(self) -> None:
-        super().__init__("wall_follow", parameter_overrides=[])
+        super().__init__("wall_following_node", parameter_overrides=[])
 
         self.last_time: float = time.time()
         self.integral: float = 0.0
         self.prev_error: float = 0.0
 
-        lidarscan_topic: str = "/scan"
-        drive_topic: str = "/drive_vel"
-
-        self.lidar_sub = self.create_subscription(LaserScan, lidarscan_topic, self.lidar_callback, 10)
-        self.drive_pub = self.create_publisher(Twist, drive_topic, 10)
-        self.viz_error_pub = self.create_publisher(Float64, "/viz/wall_follow/error", 10)
-        self.viz_steering_pub = self.create_publisher(Float64, "/viz/wall_follow/steering", 10)
+        self.lidar_sub = self.create_subscription(LaserScan, "scan", self.lidar_callback, 10)
+        self.drive_pub = self.create_publisher(Twist, "cmd_drive", 10)
+        self.viz_error_pub = self.create_publisher(Float64, "viz/wall_follow/error", 10)
+        self.viz_steering_pub = self.create_publisher(Float64, "viz/wall_follow/steering", 10)
 
     def lidar_callback(self, data: LaserScan) -> None:
         current_time: float = time.time()
@@ -66,9 +63,9 @@ class WallFollow(Node):
         self.viz_steering_pub.publish(Float64(data=steering_angle))
 
         if abs(steering_angle) <= math.radians(20):
-            velocity = 1.0
+            velocity = 1.4
         else:
-            velocity = 0.5
+            velocity = 1.4
 
         twist_msg = Twist()
         twist_msg.angular.z = steering_angle / delta_time
@@ -77,10 +74,11 @@ class WallFollow(Node):
 
     def get_range_at_angle(self, data: LaserScan, angle: float) -> float:
         if angle < data.angle_min or angle > data.angle_max:
-            return float("inf")
-        else:
-            index = int((angle - data.angle_min) / data.angle_increment)
-            return data.ranges[index]
+            raise ValueError("Angle out of range")
+
+        index = int((angle - data.angle_min) / data.angle_increment)
+
+        return data.ranges[index]
 
     def pid_control(self, error: float, delta_time: float) -> float:
         self.integral += error
@@ -95,7 +93,7 @@ class WallFollow(Node):
 
 def main(args=None):
     rclpy.init(args=args)
-    wf = WallFollow()
+    wf = WallFollowingNode()
     rclpy.spin(wf)
     wf.destroy_node()
     rclpy.shutdown()

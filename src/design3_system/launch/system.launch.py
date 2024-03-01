@@ -11,17 +11,27 @@ from launch_ros.actions import Node
 def generate_launch_description():
     shared_dir = get_package_share_directory("design3_system")
 
-    lidar_launch = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource([os.path.join(shared_dir, "launch"), "/lidar.launch.py"])
-    )
-
+    # TF
     description_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([os.path.join(shared_dir, "launch"), "/description.launch.py"])
     )
 
-    motor_driver_node = Node(package="motor_driver", executable="motor_driver_node")
+    # Sensors
+    lidar_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([os.path.join(shared_dir, "launch"), "/lidar.launch.py"])
+    )
 
-    # Twist mux
+    camera_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([os.path.join(shared_dir, "launch"), "/camera.launch.py"])
+    )
+
+    optical_sensor_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([os.path.join(shared_dir, "launch"), "/optical_sensor.launch.py"])
+    )
+
+    # Motor
+    motor_driver_node = Node(package="control", executable="motor_driver_node")
+
     twist_mux_config = os.path.join(
         get_package_share_directory("design3_system"),
         "config",
@@ -38,4 +48,20 @@ def generate_launch_description():
         remappings=[("cmd_vel_out", "cmd_vel")],
     )
 
-    return LaunchDescription([lidar_launch, description_launch, motor_driver_node, twist_mux_la, twist_mux_node])
+    # Teleop
+    teleop_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([os.path.join(shared_dir, "launch"), "/teleop.launch.py"])
+    )
+
+    return LaunchDescription(
+        [
+            description_launch,
+            lidar_launch,
+            camera_launch,
+            optical_sensor_launch,
+            motor_driver_node,
+            twist_mux_la,
+            twist_mux_node,
+            teleop_launch,
+        ]
+    )
