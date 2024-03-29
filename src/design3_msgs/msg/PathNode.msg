@@ -1,0 +1,3 @@
+int64 robot_state
+string from_destination_id
+string to_destination_id

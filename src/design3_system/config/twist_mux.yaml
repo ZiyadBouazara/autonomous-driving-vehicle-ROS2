@@ -1,6 +1,10 @@
 twist_mux_node:
   ros__parameters:
     topics:
+      null:
+        topic: cmd_null
+        timeout: 0.5
+        priority: 1
       drive:
         topic: cmd_drive
         timeout: 0.5

@@ -22,8 +22,35 @@
   ],
   "python.analysis.typeCheckingMode": "basic",
 
+  "python.analysis.extraPaths": ["/opt/ros/foxy/lib/python3.8/site-packages"],
+
   "python.autoComplete.extraPaths": [
-    "/opt/ros/foxy/lib/python3.8/site-packages"
+    "/opt/ros/foxy/lib/python3.8/site-packages",
+    "~/design3_ws/install/ros2_aruco_interfaces/lib/python3.8/site-packages",
+    "~/design3_ws/build/ros2_aruco",
+    "~/design3_ws/install/ros2_aruco/lib/python3.8/site-packages",
+    "~/design3_ws/build/planning",
+    "~/design3_ws/install/planning/lib/python3.8/site-packages",
+    "~/design3_ws/build/perception",
+    "~/design3_ws/install/perception/lib/python3.8/site-packages",
+    "~/design3_ws/install/design3_msgs/lib/python3.8/site-packages",
+    "~/design3_ws/build/control",
+    "~/design3_ws/install/control/lib/python3.8/site-packages"
   ],
-  "python.analysis.extraPaths": ["/opt/ros/foxy/lib/python3.8/site-packages"]
+  "python.analysis.extraPaths": [
+    "/opt/ros/foxy/lib/python3.8/site-packages",
+    "~/design3_ws/install/ros2_aruco_interfaces/lib/python3.8/site-packages",
+    "~/design3_ws/build/ros2_aruco",
+    "~/design3_ws/install/ros2_aruco/lib/python3.8/site-packages",
+    "~/design3_ws/build/planning",
+    "~/design3_ws/install/planning/lib/python3.8/site-packages",
+    "~/design3_ws/build/perception",
+    "~/design3_ws/install/perception/lib/python3.8/site-packages",
+    "~/design3_ws/install/design3_msgs/lib/python3.8/site-packages",
+    "~/design3_ws/build/control",
+    "~/design3_ws/install/control/lib/python3.8/site-packages"
+  ],
+
+  // ROS
+  "ros.distro": "foxy",
 }

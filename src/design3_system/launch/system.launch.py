@@ -16,30 +16,42 @@ def generate_launch_description():
         PythonLaunchDescriptionSource([os.path.join(shared_dir, "launch"), "/description.launch.py"])
     )
 
-    # Sensors
+    # Lidar
     lidar_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([os.path.join(shared_dir, "launch"), "/lidar.launch.py"])
     )
 
+    # Camera
     camera_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([os.path.join(shared_dir, "launch"), "/camera.launch.py"])
     )
 
-    optical_sensor_launch = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource([os.path.join(shared_dir, "launch"), "/optical_sensor.launch.py"])
+    # Aruco
+    aruco_params = os.path.join(get_package_share_directory("design3_system"), "config", "aruco_detection.yaml")
+
+    aruco_car_node = Node(
+        package="ros2_aruco",
+        executable="aruco_node",
+        name="aruco_car_node",
+        parameters=[aruco_params],
+        remappings=[("aruco_poses", "aruco/car_poses"), ("aruco_markers", "aruco/car_markers")],
     )
 
-    # Motor
-    motor_driver_node = Node(package="control", executable="motor_driver_node")
+    aruco_city_node = Node(
+        package="ros2_aruco",
+        executable="aruco_node",
+        name="aruco_city_node",
+        parameters=[aruco_params],
+        remappings=[("aruco_poses", "aruco/city_poses"), ("aruco_markers", "aruco/city_markers")],
+    )
 
+    # Twist mux
     twist_mux_config = os.path.join(
         get_package_share_directory("design3_system"),
         "config",
         "twist_mux.yaml",
     )
-
     twist_mux_la = DeclareLaunchArgument("twist_mux_config", default_value=twist_mux_config)
-
     twist_mux_node = Node(
         package="twist_mux",
         executable="twist_mux",
@@ -58,8 +70,8 @@ def generate_launch_description():
             description_launch,
             lidar_launch,
             camera_launch,
-            optical_sensor_launch,
-            motor_driver_node,
+            aruco_car_node,
+            aruco_city_node,
             twist_mux_la,
             twist_mux_node,
             teleop_launch,

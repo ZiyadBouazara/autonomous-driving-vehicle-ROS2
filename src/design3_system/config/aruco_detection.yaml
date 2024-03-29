@@ -8,7 +8,7 @@
 
 /aruco_city_node:
   ros__parameters:
-    marker_size: 0.02
+    marker_size: 0.075
     aruco_dictionary_id: DICT_5X5_50
     image_topic: /oak/rgb/image_raw
     camera_info_topic: /oak/rgb/camera_info

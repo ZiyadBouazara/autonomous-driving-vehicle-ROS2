@@ -1,0 +1,2 @@
+string city_loc_id
+geometry_msgs/Pose pose

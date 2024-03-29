@@ -1,0 +1,11 @@
+from enum import Enum
+
+
+class RobotState(Enum):
+    WAITING_MAP_INFO = 0
+    WAITING_NAVIGATION_START = 1
+    WAITING_DROP_POINT_INFOS = 2
+    GOING_TO_DROP_POINT = 3
+    ARRIVED_AT_DROP_POINT = 4
+    GOING_TO_DEPOT = 5
+    ARRIVED_AT_DEPOT = 6

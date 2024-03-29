@@ -1,0 +1,4 @@
+int64 robot_state
+string robot_state_description
+string from_loc_id
+string destination_loc_id

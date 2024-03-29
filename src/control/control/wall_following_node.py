@@ -1,26 +1,28 @@
-# Python import
-from __future__ import print_function
-
 import math
 import sys
 import time
+from typing import Union
 
-# ROS Imports
 import rclpy
 from geometry_msgs.msg import Twist
 from rclpy.node import Node
 from sensor_msgs.msg import LaserScan
-from std_msgs.msg import Float64
+
+from design3_msgs.msg import Objective
+from planning.utils.robot_state import RobotState
+
+# ROS Imports
 
 # PID CONTROL PARAMS
-KP: float = 8.0
-KD: float = 0.05
-KI: float = 0
+KP: float = 30.0
+KD: float = 6.0
+KI: float = 0.0
 
 # WALL FOLLOW PARAMS
-THETA_DEG: int = 70
-DESIRED_DISTANCE_FROM_WALL: float = 0.14
-LOOKAHEAD: float = 1.4
+THETA_DEG: int = 50
+DESIRED_DISTANCE_FROM_WALL: float = 0.15
+LOOKAHEAD: float = 0.1
+VELOCITY = 0.5
 
 
 class WallFollowingNode(Node):
@@ -32,11 +34,29 @@ class WallFollowingNode(Node):
         self.prev_error: float = 0.0
 
         self.lidar_sub = self.create_subscription(LaserScan, "scan", self.lidar_callback, 10)
+        self.objective_sub = self.create_subscription(Objective, "objective", self.objective_callback, 10)
+
         self.drive_pub = self.create_publisher(Twist, "cmd_drive", 10)
-        self.viz_error_pub = self.create_publisher(Float64, "viz/wall_follow/error", 10)
-        self.viz_steering_pub = self.create_publisher(Float64, "viz/wall_follow/steering", 10)
+
+        self.current_objective: Union[Objective, None] = None
+
+        self.get_logger().info("Wall following node started")
+
+    def objective_callback(self, msg: Objective) -> None:
+        self.current_objective = msg
+        self.get_logger().info(f"Received new objective: {msg.robot_state_description}")
 
     def lidar_callback(self, data: LaserScan) -> None:
+        if self.current_objective is None:
+            return
+
+        # We only follow the wall when we are going to the depot or the drop point
+        if (
+            self.current_objective.robot_state != RobotState.GOING_TO_DEPOT.value
+            and self.current_objective.robot_state != RobotState.GOING_TO_DROP_POINT.value
+        ):
+            return
+
         current_time: float = time.time()
         delta_time_s = current_time - self.last_time
 
@@ -59,17 +79,11 @@ class WallFollowingNode(Node):
 
         steering_angle = self.pid_control(error, delta_time)
 
-        self.viz_error_pub.publish(Float64(data=error))
-        self.viz_steering_pub.publish(Float64(data=steering_angle))
-
-        if abs(steering_angle) <= math.radians(20):
-            velocity = 1.4
-        else:
-            velocity = 1.4
+        self.get_logger().info(f"Steering angle: {math.degrees(steering_angle)}")
 
         twist_msg = Twist()
         twist_msg.angular.z = steering_angle / delta_time
-        twist_msg.linear.x = velocity
+        twist_msg.linear.x = VELOCITY
         self.drive_pub.publish(twist_msg)
 
     def get_range_at_angle(self, data: LaserScan, angle: float) -> float:

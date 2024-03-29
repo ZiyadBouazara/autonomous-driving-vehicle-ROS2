@@ -5,7 +5,15 @@
         "databaseFilename": "${default}",
         "limitSymbolsToIncludedHeaders": false
       },
-      "includePath": ["/opt/ros/foxy/include/**", "/usr/include/**"],
+
+      "includePath": [
+        "/opt/ros/foxy/include/**",
+        "/usr/include/**",
+        "~/design3_ws/install/ros2_aruco_interfaces/include/**",
+        "~/design3_ws/install/design3_msgs/include/**",
+        "~/design3_ws/src/ldlidar_stl_ros2/include/**"
+      ],
+
       "name": "ROS",
       "intelliSenseMode": "gcc-x64",
       "compilerPath": "/usr/bin/gcc",

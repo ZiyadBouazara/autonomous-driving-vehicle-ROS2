@@ -21,6 +21,7 @@ setup(
         "console_scripts": [
             "motor_driver_node = control.motor_driver_node:main",
             "wall_following_node = control.wall_following_node:main",
+            "null_command_sending_node = control.null_command_sending_node:main",
         ],
     },
 )

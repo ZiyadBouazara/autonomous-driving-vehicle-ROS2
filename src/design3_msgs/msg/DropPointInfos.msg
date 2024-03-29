@@ -1,0 +1,1 @@
+design3_msgs/DropPointInfo[] drop_points

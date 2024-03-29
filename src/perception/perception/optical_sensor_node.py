@@ -10,12 +10,15 @@ TIMER_PERIOD_S = 1  # in seconds
 class OpticalSensorNode(Node):
     def __init__(self):
         super().__init__("optical_sensor_node", parameter_overrides=[])
-        self.publisher = self.create_publisher(Bool, "optical_sensor", 10)
+
+        self.publisher = self.create_publisher(Bool, "is_car_loaded", 10)
 
         GPIO.setmode(GPIO.BOARD)
         GPIO.setup(OPTICAL_SENSOR_PIN, GPIO.IN)
 
         self.timer = self.create_timer(TIMER_PERIOD_S, self.timer_callback)
+
+        self.get_logger().info("Optical sensor node has been started.")
 
     def timer_callback(self):
         value = not GPIO.input(OPTICAL_SENSOR_PIN)

@@ -1,0 +1,3 @@
+string origin
+string destination
+string direction
