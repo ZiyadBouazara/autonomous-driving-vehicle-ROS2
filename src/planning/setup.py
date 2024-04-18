@@ -23,6 +23,7 @@ setup(
             "interface_bridge_node= planning.interface_bridge_node:main",
             "path_planning_node= planning.path_planning_node:main",
             "path_following_node= planning.path_following_node:main",
+            "close_car_detection_node= planning.close_car_detection_node:main",
         ],
     },
 )

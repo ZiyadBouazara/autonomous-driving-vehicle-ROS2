@@ -18,4 +18,22 @@ def generate_launch_description():
         executable="path_following_node",
     )
 
-    return LaunchDescription([objective_manager_node, path_planning_node, path_following_node])
+    close_car_detection_node = Node(
+        package="planning",
+        executable="close_car_detection_node",
+    )
+
+    interface_bridge_node = Node(
+        package="planning",
+        executable="interface_bridge_node",
+    )
+
+    return LaunchDescription(
+        [
+            objective_manager_node,
+            path_planning_node,
+            path_following_node,
+            close_car_detection_node,
+            interface_bridge_node,
+        ]
+    )

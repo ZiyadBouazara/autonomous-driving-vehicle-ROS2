@@ -3,17 +3,21 @@ twist_mux_node:
     topics:
       null:
         topic: cmd_null
-        timeout: 0.5
+        timeout: 0.1
         priority: 1
       drive:
         topic: cmd_drive
-        timeout: 0.5
+        timeout: 0.1
         priority: 10
-      joystick:
-        topic: cmd_joy
-        timeout: 0.5
+      intersection:
+        topic: cmd_intersection
+        timeout: 0.1
         priority: 20
       car_detection:
         topic: cmd_detected_car
-        timeout: 0.5
+        timeout: 0.1
+        priority: 254
+      joystick:
+        topic: cmd_joy
+        timeout: 0.1
         priority: 255

@@ -1,3 +1,4 @@
+import time
 from typing import Union
 
 import rclpy
@@ -8,6 +9,7 @@ from design3_msgs.msg import DropPointInfo, DropPointInfos, Localization, MapInf
 from planning.utils.robot_state import RobotState
 
 INITIAL_STATE = RobotState.WAITING_MAP_INFO
+INITIAL_HOME_DEPOT = ""
 
 
 def choose_drop_point(drop_point_infos: DropPointInfos) -> Union[DropPointInfo, None]:
@@ -33,14 +35,20 @@ class ObjectiveManagerNode(Node):
 
         self.objective_pub = self.create_publisher(Objective, "objective", 10)
 
-        self.home_depot: str = ""
+        self.home_depot: str = INITIAL_HOME_DEPOT
         self.last_loc_id: str = ""
+        self.last_start_time = time.time()
 
         self.get_logger().info("Objective manager node started")
 
         self.change_state(INITIAL_STATE)
 
-    def change_state(self, new_state: RobotState, new_destination_id: str = "", current_loc_id: str = ""):
+    def change_state(
+        self,
+        new_state: RobotState,
+        new_destination_id: str = "",
+        current_loc_id: str = "",
+    ):
         self.current_state = new_state
         self.get_logger().info(
             f"Changed state: {new_state.name} {current_loc_id} {'->' if new_destination_id != '' else ''} {new_destination_id}"
@@ -57,7 +65,11 @@ class ObjectiveManagerNode(Node):
 
     def change_state_callback(self, objective: Objective):
         self.get_logger().warn("Manual state change requested...")
-        self.change_state(RobotState(objective.robot_state), objective.destination_loc_id, objective.from_loc_id)
+        self.change_state(
+            RobotState(objective.robot_state),
+            objective.destination_loc_id,
+            objective.from_loc_id,
+        )
 
     def map_info_callback(self, _):
         # Once map is received, we wait for navigation start
@@ -89,6 +101,7 @@ class ObjectiveManagerNode(Node):
 
         depot_loc_id = f"ZC{chosen_drop_point.id}"
         self.change_state(RobotState.GOING_TO_DROP_POINT, depot_loc_id, self.last_loc_id)
+        self.last_start_time = time.time()
 
     def localization_callback(self, localization: Localization):
         self.last_loc_id = localization.city_loc_id
@@ -113,6 +126,19 @@ class ObjectiveManagerNode(Node):
         ):
             self.change_state(RobotState.ARRIVED_AT_DEPOT)
             return
+        # If we see back our depot at one of these state, we restart the loop
+        elif (
+            self.current_state.value == RobotState.GOING_TO_DROP_POINT.value
+            or self.current_state.value == RobotState.ARRIVED_AT_DROP_POINT.value
+            or self.current_state.value == RobotState.GOING_TO_DEPOT.value
+        ) and localization.city_loc_id == self.home_depot:
+            current_time = time.time()
+
+            SECOND_THRESOLD = 5
+            if current_time - self.last_start_time > SECOND_THRESOLD:
+                self.get_logger().warn("Back to depot :( Relocalizing...")
+                self.change_state(RobotState.WAITING_DROP_POINT_INFOS)
+                return
 
     def optical_sensor_callback(self, is_car_loaded: Bool):
         # If we are at the drop point and the car is loaded, go to the depot

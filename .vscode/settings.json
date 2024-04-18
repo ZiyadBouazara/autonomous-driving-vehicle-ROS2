@@ -53,4 +53,5 @@
 
   // ROS
   "ros.distro": "foxy",
+  "ros.distro": "foxy"
 }

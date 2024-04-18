@@ -3,7 +3,7 @@ from typing import Union
 import rclpy
 from rclpy.node import Node
 
-from design3_msgs.msg import Edge, Localization, Path
+from design3_msgs.msg import Edge, Localization, Path, RecomputePath
 
 
 class PathFollowingNode(Node):
@@ -11,8 +11,11 @@ class PathFollowingNode(Node):
         super().__init__("path_following_node", parameter_overrides=[])
 
         self.create_subscription(Path, "path", self.path_callback, 10)
-        self.create_subscription(Localization, "localization", self.localization_callback, 10)
+        self.create_subscription(
+            Localization, "localization", self.localization_callback, 10
+        )
 
+        self.recompute_path_pub = self.create_publisher(RecomputePath, "recompute_path", 10)
         self.current_edge_pub = self.create_publisher(Edge, "current_edge", 10)
 
         self.path: Union[Path, None] = None
@@ -35,7 +38,9 @@ class PathFollowingNode(Node):
         origin = edges[0].origin
         destination = edges[-1].destination
         if origin == destination:
-            self.get_logger().warn("Path with same origin and destination received, nothing to follow")
+            self.get_logger().warn(
+                "Path with same origin and destination received, nothing to follow"
+            )
             return
 
         self.path = path
@@ -55,7 +60,9 @@ class PathFollowingNode(Node):
         if localization.city_loc_id == self.current_edge.destination:
             # If there are no more edges to follow, reset the path
             if len(self.path.edges) == 1:
-                self.get_logger().info(f"Arrived at {localization.city_loc_id}, no more edges to follow")
+                self.get_logger().info(
+                    f"Arrived at {localization.city_loc_id}, no more edges to follow"
+                )
                 self.reset_path()
                 return
 
@@ -68,6 +75,12 @@ class PathFollowingNode(Node):
             self.get_logger().info(
                 f"Arrived at {localization.city_loc_id}, now following new edge {self.current_edge.origin} -- {self.current_edge.direction} --> {self.current_edge.destination}"
             )
+
+        elif localization.city_loc_id != self.current_edge.origin:
+            self.get_logger().warn(f"Robot deviated from the path at {localization.city_loc_id}, requesting path recompute")
+            recompute_msg = RecomputePath()
+            recompute_msg.current_location = localization.city_loc_id
+            self.recompute_path_pub.publish(recompute_msg)
 
     def publish_current_edge(self):
         if self.current_edge is None:

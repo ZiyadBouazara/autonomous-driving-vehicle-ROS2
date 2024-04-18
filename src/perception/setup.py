@@ -22,6 +22,7 @@ setup(
             "car_detection_node = perception.car_detection_node:main",
             "optical_sensor_node= perception.optical_sensor_node:main",
             "localization_node= perception.localization_node:main",
+            "drop_point_infos_receiver_node= perception.drop_point_infos_receiver_node:main",
         ],
     },
 )

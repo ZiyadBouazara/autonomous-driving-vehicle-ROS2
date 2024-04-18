@@ -4,7 +4,7 @@ import networkx as nx
 import rclpy
 from rclpy.node import Node
 
-from design3_msgs.msg import Edge, MapInfo, Objective, Path
+from design3_msgs.msg import Edge, MapInfo, Objective, Path, RecomputePath
 from planning.utils.robot_state import RobotState
 
 
@@ -26,7 +26,9 @@ def build_graph(map_info: MapInfo) -> "Tuple[nx.DiGraph, dict[Tuple[str, str], s
     return G, dic_edge_labels
 
 
-def build_edges(shortest_path: "list[str]", dic_edge_labels: "dict[Tuple[str, str], str]"):
+def build_edges(
+    shortest_path: "list[str]", dic_edge_labels: "dict[Tuple[str, str], str]"
+):
     if len(shortest_path) < 2:
         return []
 
@@ -48,8 +50,10 @@ class PathPlanningNode(Node):
 
         self.create_subscription(MapInfo, "map_info", self.map_info_callback, 10)
         self.create_subscription(Objective, "objective", self.objective_callback, 10)
+        self.create_subscription(RecomputePath, "recompute_path", self.recompute_path_callback, 10)
 
         self.path_pub = self.create_publisher(Path, "path", 10)
+        self.current_destination: str = ""
 
         self.graph: Union[nx.DiGraph, None] = None
         self.dic_edge_labels: dict[Tuple[str, str], str] = {}
@@ -76,23 +80,60 @@ class PathPlanningNode(Node):
         destination = objective.destination_loc_id
 
         if origin == "" or destination == "":
-            self.get_logger().error("Can't find path, because origin or destination is empty!")
+            self.get_logger().error(
+                "Can't find path, because origin or destination is empty!"
+            )
             return
         elif origin == destination:
             self.get_logger().error(f"Origin and destination are the same: {origin}")
             return
 
+        self.current_destination = destination
         self.get_logger().info(f"Computing path {origin} -> {destination}")
 
         try:
             shortest_path: list[str] = nx.shortest_path(self.graph, source=origin, target=destination)  # type: ignore
             self.publish_path(shortest_path)
         except nx.NetworkXNoPath:
-            self.get_logger().error(f"No path found between {origin} and {destination}.")
+            self.get_logger().error(
+                f"No path found between {origin} and {destination}."
+            )
         except nx.NodeNotFound:
             self.get_logger().error(f"Node not found in the graph.")
         except:
             self.get_logger().error("An error occurred while computing the path.")
+    
+    def recompute_path_callback(self, recompute_msg: RecomputePath):
+        if self.graph is None or self.dic_edge_labels is None:
+            self.get_logger().error("Can't recompute path, because there is no graph!")
+            return
+
+        current_location = recompute_msg.current_location
+        destination = self.current_destination
+
+        if current_location == "" or destination == "":
+            self.get_logger().error(
+                "Can't recompute path, because current location or destination is empty!"
+            )
+            return
+        elif current_location == destination:
+            self.get_logger().error(f"Current location and destination are the same: {current_location}")
+            return
+
+        self.get_logger().info(f"Recomputing path from {current_location} to {destination}")
+
+        try:
+           shortest_path: list[str] = nx.shortest_path(self.graph, source=current_location, target=destination) # type: ignore
+           self.publish_path(shortest_path)
+        except nx.NetworkXNoPath:
+            self.get_logger().error(
+                f"No path found between {current_location} and {destination}."
+            )
+        except nx.NodeNotFound:
+            self.get_logger().error(f"Node not found in the graph.")
+        except Exception as e:
+            self.get_logger().error(f"An error occurred while computing the path: {str(e)}")
+
 
     def publish_path(self, shortest_path: "list[str]"):
         path = Path()

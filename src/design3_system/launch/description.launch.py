@@ -11,7 +11,9 @@ def generate_launch_description():
         get_package_share_directory("design3_system"), "urdf", "rover_description.urdf"
     )
 
-    robot_description_la = DeclareLaunchArgument("robot_description_urdf", default_value=robot_description_urdf)
+    robot_description_la = DeclareLaunchArgument(
+        "robot_description_urdf", default_value=robot_description_urdf
+    )
 
     with open(robot_description_urdf, "r") as f:
         robot_description_content = f.read()

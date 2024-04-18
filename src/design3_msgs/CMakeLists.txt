@@ -24,6 +24,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/ArucoMarker.msg"
   "msg/DropPointInfos.msg"
   "msg/Path.msg"
+  "msg/RecomputePath.msg"
   DEPENDENCIES geometry_msgs
   DEPENDENCIES diagnostic_msgs
 )

@@ -17,20 +17,8 @@ Setup the udev rules so that the lidar is on `/dev/sensors/lidar` with proper pe
 ```bash
 cd design3_ws
 ./build.bash
-./source_ws.bash # Always source your workspace after a build
-./startup.bash # This starts the whole system
-```
-
-## Stopping the system
-
-```bash
-killall screen
-```
-
-## Launching a subsystem
-
-```bash
-ros2 launch design3_system <subsystem>.launch.py # You can use autocomplete to list the different available launch file
+source source_ws.bash # Always source your workspace after a build
+restart_design3 # This is an alias in bashrc for 'sudo systemctl restart design3-system.service'
 ```
 
 ## Running tests and code coverage

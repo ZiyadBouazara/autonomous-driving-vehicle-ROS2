@@ -12,7 +12,9 @@ def init_wall_following():
     rclpy.shutdown()
 
 
-def given_angle_too_small_when_get_range_at_angle_then_raise_value_error(init_wall_following: WallFollowingNode):
+def given_angle_too_small_when_get_range_at_angle_then_raise_value_error(
+    init_wall_following: WallFollowingNode,
+):
     laser_scan = LaserScan()
     laser_scan.angle_min = 0
 
@@ -20,7 +22,9 @@ def given_angle_too_small_when_get_range_at_angle_then_raise_value_error(init_wa
         init_wall_following.get_range_at_angle(laser_scan, -1)
 
 
-def given_angle_too_large_when_get_range_at_angle_then_raise_value_error(init_wall_following: WallFollowingNode):
+def given_angle_too_large_when_get_range_at_angle_then_raise_value_error(
+    init_wall_following: WallFollowingNode,
+):
     laser_scan = LaserScan()
     laser_scan.angle_max = 0
 
@@ -28,7 +32,9 @@ def given_angle_too_large_when_get_range_at_angle_then_raise_value_error(init_wa
         init_wall_following.get_range_at_angle(laser_scan, 1)
 
 
-def given_angle_in_range_when_get_range_at_angle_then_return_correct_value(init_wall_following: WallFollowingNode):
+def given_angle_in_range_when_get_range_at_angle_then_return_correct_value(
+    init_wall_following: WallFollowingNode,
+):
     laser_scan = LaserScan()
     laser_scan.angle_min = 0
     laser_scan.angle_max = 1

@@ -14,4 +14,13 @@ def generate_launch_description():
         name="localization_node",
     )
 
-    return LaunchDescription([optical_sensor_node, localization_node])
+    car_detection_node = Node(
+        package="perception",
+        executable="car_detection_node",
+    )
+
+    drop_points_receiver_node = Node(
+        package="perception", executable="drop_point_infos_receiver_node", name="drop_point_infos_receiver_node"
+    )
+
+    return LaunchDescription([optical_sensor_node, localization_node, drop_points_receiver_node, car_detection_node])

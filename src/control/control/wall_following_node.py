@@ -3,26 +3,26 @@ import sys
 import time
 from typing import Union
 
+from planning.utils.robot_state import RobotState
 import rclpy
 from geometry_msgs.msg import Twist
 from rclpy.node import Node
 from sensor_msgs.msg import LaserScan
 
 from design3_msgs.msg import Objective
-from planning.utils.robot_state import RobotState
 
 # ROS Imports
 
 # PID CONTROL PARAMS
-KP: float = 30.0
-KD: float = 6.0
+KP: float = 3.0
+KD: float = 0.0
 KI: float = 0.0
 
 # WALL FOLLOW PARAMS
-THETA_DEG: int = 50
+THETA_DEG: int = 60
 DESIRED_DISTANCE_FROM_WALL: float = 0.15
-LOOKAHEAD: float = 0.1
-VELOCITY = 0.5
+LOOKAHEAD: float = 0.15
+VELOCITY = 0.15
 
 
 class WallFollowingNode(Node):
@@ -39,6 +39,7 @@ class WallFollowingNode(Node):
         self.drive_pub = self.create_publisher(Twist, "cmd_drive", 10)
 
         self.current_objective: Union[Objective, None] = None
+        self.last_twist_msg: Union[Twist, None] = None
 
         self.get_logger().info("Wall following node started")
 
@@ -70,6 +71,10 @@ class WallFollowingNode(Node):
         b = self.get_range_at_angle(data, 0)
 
         if math.isnan(a) or math.isnan(b) or math.isinf(a) or math.isinf(b):
+            if self.last_twist_msg is None:
+                return
+
+            self.drive_pub.publish(self.last_twist_msg)
             return
 
         alpha = math.atan((a * math.cos(theta) - b) / (a * math.sin(theta)))
@@ -79,11 +84,11 @@ class WallFollowingNode(Node):
 
         steering_angle = self.pid_control(error, delta_time)
 
-        self.get_logger().info(f"Steering angle: {math.degrees(steering_angle)}")
-
         twist_msg = Twist()
         twist_msg.angular.z = steering_angle / delta_time
         twist_msg.linear.x = VELOCITY
+        self.last_twist_msg = twist_msg
+
         self.drive_pub.publish(twist_msg)
 
     def get_range_at_angle(self, data: LaserScan, angle: float) -> float:

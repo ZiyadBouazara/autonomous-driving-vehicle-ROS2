@@ -14,7 +14,9 @@ def init_motor_driver():
     rclpy.shutdown()
 
 
-def test_given_val_left_and_val_right_when_create_json_command_then_return_command(init_motor_driver: MotorDriverNode):
+def test_given_val_left_and_val_right_when_create_json_command_then_return_command(
+    init_motor_driver: MotorDriverNode,
+):
     val_left = 10
     val_right = 10
 
@@ -24,7 +26,9 @@ def test_given_val_left_and_val_right_when_create_json_command_then_return_comma
     assert command == expected_command
 
 
-def test_given_twist_message_when_get_left_and_right_speed_then_return_speeds(init_motor_driver: MotorDriverNode):
+def test_given_twist_message_when_get_left_and_right_speed_then_return_speeds(
+    init_motor_driver: MotorDriverNode,
+):
     msg = Twist()
     msg.linear.x = 1.0
     msg.angular.z = 0.0
@@ -82,7 +86,9 @@ def test_given_twist_message_with_nan_angular_when_get_left_and_right_speed_then
     assert left == right == 0
 
 
-def test_given_in_between_value_when_clamp_then_return_low_value(init_motor_driver: MotorDriverNode):
+def test_given_in_between_value_when_clamp_then_return_low_value(
+    init_motor_driver: MotorDriverNode,
+):
     value, min_value, max_value = 100, 0, 255
 
     clamped_value = clamp(value, min_value, max_value)
@@ -90,7 +96,9 @@ def test_given_in_between_value_when_clamp_then_return_low_value(init_motor_driv
     assert clamped_value == value
 
 
-def test_given_high_value_when_clamp_then_return_max_value(init_motor_driver: MotorDriverNode):
+def test_given_high_value_when_clamp_then_return_max_value(
+    init_motor_driver: MotorDriverNode,
+):
     value, min_value, max_value = 1000, 0, 255
 
     clamped_value = clamp(value, min_value, max_value)
@@ -98,7 +106,9 @@ def test_given_high_value_when_clamp_then_return_max_value(init_motor_driver: Mo
     assert clamped_value == max_value
 
 
-def test_given_low_value_when_clamp_then_return_low_value(init_motor_driver: MotorDriverNode):
+def test_given_low_value_when_clamp_then_return_low_value(
+    init_motor_driver: MotorDriverNode,
+):
     value, min_value, max_value = -1000, 0, 255
 
     clamped_value = clamp(value, min_value, max_value)

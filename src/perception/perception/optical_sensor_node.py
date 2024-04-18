@@ -16,11 +16,11 @@ class OpticalSensorNode(Node):
         GPIO.setmode(GPIO.BOARD)
         GPIO.setup(OPTICAL_SENSOR_PIN, GPIO.IN)
 
-        self.timer = self.create_timer(TIMER_PERIOD_S, self.timer_callback)
+        GPIO.add_event_detect(OPTICAL_SENSOR_PIN, GPIO.FALLING, callback=self.edge_callback, bouncetime=10)
 
         self.get_logger().info("Optical sensor node has been started.")
 
-    def timer_callback(self):
+    def edge_callback(self, channel):
         value = not GPIO.input(OPTICAL_SENSOR_PIN)
         msg = Bool()
         msg.data = bool(value)

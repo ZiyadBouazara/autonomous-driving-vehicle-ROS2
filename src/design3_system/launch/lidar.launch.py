@@ -1,24 +1,27 @@
-import os
-
-from ament_index_python import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument
-from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 
 
 def generate_launch_description():
-    lidar_shared_dir = get_package_share_directory("design3_system")
-    laser_config = os.path.join(lidar_shared_dir, "config", "lidar.yaml")
-
-    laser_la = DeclareLaunchArgument("laser_config", default_value=laser_config)
-
-    laser_node = Node(
-        package="ldlidar_stl_ros2",
-        executable="ldlidar_stl_ros2_node",
-        name="LD19",
+    ldlidar_node = Node(
+        package="ldlidar_ros2",
+        executable="ldlidar_ros2_node",
+        name="ldlidar_ros2_node",
         output="screen",
-        parameters=[LaunchConfiguration("laser_config")],
+        parameters=[
+            {"product_name": "LDLiDAR_STL19P"},
+            {"laser_scan_topic_name": "scan"},
+            {"point_cloud_2d_topic_name": "pointcloud2d"},
+            {"frame_id": "base_laser"},
+            {"port_name": "/dev/sensors/lidar"},
+            {"serial_baudrate": 230400},
+            {"laser_scan_dir": True},
+            {"enable_angle_crop_func": False},
+            {"angle_crop_min": 135.0},  # unit is degrees
+            {"angle_crop_max": 225.0},  # unit is degrees
+            {"range_min": 0.03},  # unit is meter
+            {"range_max": 12.0},  # unit is meter
+        ],
     )
 
-    return LaunchDescription([laser_la, laser_node])
+    return LaunchDescription([ldlidar_node])
