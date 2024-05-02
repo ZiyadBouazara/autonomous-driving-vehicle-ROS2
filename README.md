@@ -2,6 +2,17 @@
 
 This repo contains the colcon workspace for the design3 project. Every ROS packages are cloned using submodules. It also includes a package 'design3_system' which has every launch files to properly start each subsystem
 
+## Demo
+![image1](https://github.com/ZiyadBouazara/self-driving-vehicle-ROS2/assets/97689339/da12004a-24da-4842-958f-a406ddb712c5)
+
+![image2](https://github.com/ZiyadBouazara/self-driving-vehicle-ROS2/assets/97689339/cccd7225-a057-4146-acb7-69026d92c36b)
+
+## Features
+- Path planning (using Djikstra Graph Shortest Path Algorithm)
+- Wall Following
+- Perception info analysis (Camera, Lidar)
+- Other Vehicle Detection + Breaking
+
 ## Installation
 
 ```bash
